@@ -1,0 +1,8 @@
+{% import 'macros/macros.html' as mac %}
+
+{% extends "layout.html" %}
+{% block content %}
+    {% for post in posts %}
+        {{ mac.post_card(post.author, post.date_posted, post.title, post.content) }}
+    {% endfor %}
+{% endblock content %}

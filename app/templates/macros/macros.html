@@ -1,0 +1,44 @@
+
+
+{# Post Card #}
+{% macro post_card(author, data, title, content) -%}
+    <article class="media content-section">
+        <div class="media-body">
+            <div class="article-metadata">
+                <a class="mr-2" href="#">{{ author }}</a>
+                <small class="text-muted">{{ date }}</small>
+            </div>
+            <h2><a class="article-title" href="#">{{ title }}</a></h2>
+            <p class="article-content">{{ content }}</p>
+        </div>
+    </article>
+{%- endmacro %}
+
+
+{# Form Filed Elements #}
+{% macro form_fild(fild_name) -%}
+    <div class="form-group">
+        {{ fild_name.label(class="form-control-label") }}
+
+        {% if fild_name.errors %}
+            {{ fild_name(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in fild_name.errors %}
+                    <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% else %}
+            {{ fild_name(class="form-control form-control-lg") }}
+        {% endif %}
+    </div>
+
+{%- endmacro %}
+
+{# Navigation Items #}
+{% macro nav_item(item) -%} 
+    <div class="collapse navbar-collapse" id="navbarToggle">
+        <div class="navbar-nav mr-auto">
+            <a class="nav-item nav-link" href="{{ url_for(item) }}">{{ item }}</a>
+        </div>
+    </div>
+{%- endmacro %}
