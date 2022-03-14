@@ -1,6 +1,6 @@
 from app import app, db, bcrypt
-from flask import redirect, render_template, url_for, flash
-from flask_login import login_user, logout_user, current_user
+from flask import redirect, render_template, request, url_for, flash
+from flask_login import login_user, logout_user, current_user, login_required
 #==============================================================================
 from app.forms import RegisterForm, LoginForm, PostForm
 from app.models import User, Post
@@ -46,7 +46,8 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
-            return redirect(url_for('home'))
+            next_page = request.args.get('next')
+            return redirect(url_for('home')) if not next_page else redirect(next_page)
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     
@@ -58,6 +59,10 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+@app.route('/account')
+@login_required
+def account():
+    return render_template('account.html', image_file='static/profile_pics/default.jpg')
 
 @app.route('/post/new', methods=['GET','POST'])
 def new_post():

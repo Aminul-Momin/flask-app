@@ -22,17 +22,21 @@
         <div class="container">
           <a class="navbar-brand mr-4" href="/">Flask Blog</a>
           <div class="collapse navbar-collapse" id="navbarToggle">
-            {% import 'macros/macros.html' as mac %}
-            {% for item in ['home','new_post','about','register'] %}
-              {{mac.nav_item(item)}}
-            {% endfor %}
-            
-            <!-- Novbar Right Side -->
-            {% if current_user.is_authenticated %}
-              {{mac.nav_item('logout')}}
-            {% else %}
-              {{mac.nav_item('login')}}
-            {% endif %}
+            <div class="navbar-nav mr-auto">
+              <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
+              <a class="nav-item nav-link" href="{{ url_for('about') }}">About</a>
+            </div>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav">
+              {% if current_user.is_authenticated %}
+                <a class="nav-item nav-link" href="{{ url_for('new_post') }}">New Post</a>
+                <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
+                <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+              {% else %}
+                <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
+                <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
+              {% endif %}
+            </div>
           </div>
         </div>
       </nav>
