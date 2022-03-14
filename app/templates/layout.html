@@ -21,12 +21,19 @@
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
           <a class="navbar-brand mr-4" href="/">Flask Blog</a>
-          
+          <div class="collapse navbar-collapse" id="navbarToggle">
             {% import 'macros/macros.html' as mac %}
-            {% for item in ['home','new_post','about','register','login','logout'] %}
-                {{mac.nav_item(item)}}
+            {% for item in ['home','new_post','about','register'] %}
+              {{mac.nav_item(item)}}
             {% endfor %}
-
+            
+            <!-- Novbar Right Side -->
+            {% if current_user.is_authenticated %}
+              {{mac.nav_item('logout')}}
+            {% else %}
+              {{mac.nav_item('login')}}
+            {% endif %}
+          </div>
         </div>
       </nav>
     </header>

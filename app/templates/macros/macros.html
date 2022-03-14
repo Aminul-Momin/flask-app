@@ -35,10 +35,8 @@
 {%- endmacro %}
 
 {# Navigation Items #}
-{% macro nav_item(item) -%} 
-    <div class="collapse navbar-collapse" id="navbarToggle">
-        <div class="navbar-nav mr-auto">
-            <a class="nav-item nav-link" href="{{ url_for(item) }}">{{ item }}</a>
-        </div>
+{% macro nav_item(item) -%}
+    <div class="navbar-nav mr-auto">
+        <a class="nav-item nav-link" href="{{ url_for(item) }}">{{ item }}</a>
     </div>
 {%- endmacro %}

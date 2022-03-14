@@ -1,5 +1,6 @@
 from app import app, db, bcrypt
 from flask import redirect, render_template, url_for, flash
+from flask_login import login_user, logout_user, current_user
 #==============================================================================
 from app.forms import RegisterForm, LoginForm, PostForm
 from app.models import User, Post
@@ -19,16 +20,10 @@ def about():
 def register():
     form = RegisterForm()
 
-    # if current_user.is_authenticated:
-    #     return redirect(url_for('home'))
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
 
     if form.validate_on_submit():
-        is_email_taken = User.query.filter_by(email=form.email.data).first()
-
-        if is_email_taken:
-            flash(f"Please choose different email. It's taken already !", 'danger')
-            return redirect(url_for('register'))
-
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user = User(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(user)
@@ -41,14 +36,16 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
 
-    # if current_user.is_authenticated:
-    #     return redirect(url_for('home'))
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
+    form = LoginForm()
 
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
             return redirect(url_for('home'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
@@ -58,7 +55,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    flash('You have been loged out', 'success')
+    logout_user()
     return redirect(url_for('home'))
 
 
