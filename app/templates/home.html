@@ -3,6 +3,6 @@
 {% extends "layout.html" %}
 {% block content %}
     {% for post in posts %}
-        {{ mac.post_card(post.author.username, post.date_posted, post.title, post.content) }}
+        {{ mac.post_card(post.author, post.date_posted, post.title, post.content, post.id, current_user) }}
     {% endfor %}
 {% endblock content %}

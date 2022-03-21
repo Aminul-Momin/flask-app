@@ -1,6 +1,6 @@
 import secrets, os
 from app import app, db, bcrypt
-from flask import redirect, render_template, request, url_for, flash
+from flask import redirect, render_template, request, url_for, flash, abort
 from flask_login import login_user, logout_user, current_user, login_required
 from PIL import Image
 #==============================================================================
@@ -12,6 +12,7 @@ from app.models import User, Post
 @app.route("/home")
 def home():
     posts = Post.query.all()
+    print(current_user)
     return render_template('home.html', posts=posts)
 
 @app.route("/about")
@@ -96,6 +97,7 @@ def account():
 
 
 @app.route("/post/new", methods=['GET','POST'])
+@login_required
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
@@ -106,4 +108,41 @@ def new_post():
         return redirect(url_for('home'))
 
     return render_template('create_post.html', form=form, Title='New Post', legend='New Post')
+
+@app.route("/post/<int:post_id>")
+def post(post_id):
+    post = Post.query.get_or_404(post_id)
+    return render_template('post.html', post=post)
+
+@app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user: abort(403)
+
+    form = PostForm()
+
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.content = form.content.data
+        db.session.commit()
+        flash('Your post has been updated', 'succes')
+        return redirect(url_for('post', post_id=post.id))
+
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.content.data = post.content
+
+    return render_template('create_post.html', form=form, title='Update Post', legend = 'Update Post')
+
+@app.route("/post/<int:post_id>/delete", methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user: abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your post has been deleted!', 'success')
+    return redirect(url_for('home'))
+
 

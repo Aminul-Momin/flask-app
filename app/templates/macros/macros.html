@@ -1,14 +1,21 @@
-
-
 {# Post Card #}
-{% macro post_card(author, date, title, content) -%}
+{% macro post_card(author, date, title, content, post_id, current_user=None) -%}
     <article class="media content-section">
+        <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/'+ author.image_file) }}" alt="">
         <div class="media-body">
             <div class="article-metadata">
-                <a class="mr-2" href="#">{{ author }}</a>
-                <small class="text-muted">{{ date }}</small>
+
+                <a class="mr-2" href="#">{{ author.username }}</a>
+                <small class="text-muted">{{ date.strftime('%Y-%m-%d') }}</small>
+                
+                {% if author == current_user %}
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_post', post_id=post_id) }}">Update</a>
+                <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+                {% endif %}
+
             </div>
-            <h2><a class="article-title" href="#">{{ title }}</a></h2>
+            
+            <h2><a class="article-title" href="{{ url_for('post', post_id=post_id) }}">{{ title }}</a></h2>
             <p class="article-content">{{ content }}</p>
         </div>
     </article>
@@ -31,7 +38,6 @@
             {{ fild_name(class="form-control form-control-lg") }}
         {% endif %}
     </div>
-
 {%- endmacro %}
 
 {# Navigation Items #}
