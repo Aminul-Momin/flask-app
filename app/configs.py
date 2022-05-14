@@ -1,9 +1,16 @@
+import os
+#==============================================================================
 class Config(object):
     DEBUG = False
     TESTING = False
     SECRET_KEY = 'f837176ba8e206da1a580bd66654bcf9'
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///site.db' 
-
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///site.db'
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 587
+    MAIL_USE_TLS = True
+    MAIL_USERNAME = os.environ.get('EMAIL_USER')
+    MAIL_PASSWORD = os.environ.get('EMAIL_PASS')
+    
     # IMAGE_UPLOADS = "/home/username/app/app/static/images/uploads"
     # SESSION_COOKIE_SECURE = True
 
