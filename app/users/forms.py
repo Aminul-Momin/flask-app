@@ -1,10 +1,10 @@
 from flask_login import current_user
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, TextAreaField,PasswordField, EmailField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from flask_wtf.file import FileField,  FileAllowed
+from wtforms import StringField, EmailField, PasswordField, SubmitField, BooleanField
+from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationError
 #==============================================================================
-from app.models import User, Post
+from app.models import User
 #==============================================================================
 
 class RegisterForm(FlaskForm):
@@ -25,6 +25,12 @@ class RegisterForm(FlaskForm):
             raise ValidationError('That email is taken, please choose different email !')
 
 
+class LoginForm(FlaskForm):
+    email = EmailField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember = BooleanField('Remember Me')
+    submit = SubmitField('Sign Up')
+
 class UpdateAccountForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -42,19 +48,6 @@ class UpdateAccountForm(FlaskForm):
             user = User.query.filter_by(email=email.data).first()
             if user:
                 raise ValidationError('That email is taken. Please choose a different one.')
-
-
-class LoginForm(FlaskForm):
-    email = EmailField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember = BooleanField('Remember Me')
-    submit = SubmitField('Sign Up')
-
-
-class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    content = TextAreaField('Content', validators=[DataRequired()])
-    submit = SubmitField('Post')
 
 
 class RequestResetForm(FlaskForm):

@@ -28,4 +28,10 @@ login_manager.login_message_category = 'info'
 
 mail = Mail(app)
 
-from app import routes
+# Registers the various routes' Blueprints
+from app.main.routes import main
+from app.users.routes import users
+from app.posts.routes import posts
+app.register_blueprint(main)
+app.register_blueprint(users)
+app.register_blueprint(posts)
